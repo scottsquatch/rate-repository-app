@@ -1,15 +1,25 @@
 import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
+import { Link } from 'react-router-native';
+
 import Text from './Text'
 
-const AppBarTab = ({ text }) => {
+const styles = {
+  container: {
+    paddingRight: 10,
+  }
+}
+const AppBarTab = ({ text, linkTo }) => {
   return (
-    <View>
-      <TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <Link 
+        to={linkTo}
+        component={TouchableWithoutFeedback}
+      >
         <View>
           <Text color="textAppBar">{text}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </Link>
     </View>
   );
 };
