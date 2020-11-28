@@ -2,12 +2,12 @@ import React from 'react';
 import { TouchableWithoutFeedback, View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { useHistory } from 'react-router-native';
 
 import Text from './Text';
 import FormikTextInput from './FormikTextInput';
 import theme from '../theme';
 import useSignIn from '../hooks/useSignIn';
-import AuthStorage from '../utils/authStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -57,6 +57,7 @@ const SignInForm = ({ onSubmit }) => {
   );
 };
 const SignIn = () => {
+  const history = useHistory();
   const [signIn] = useSignIn();
 
   const onSubmit = async (values) => {
@@ -64,8 +65,8 @@ const SignIn = () => {
 
     try {
       const { data } = await signIn({ username, password });
-      const authStorage = new AuthStorage();
-      await authStorage.setAccessToken(data.authorize.accessToken);
+      console.log(data);
+      history.push('/');
     } catch (e) {
       console.log(e);
     }
