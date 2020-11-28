@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+
 import Text from './Text';
 import theme from '../theme';
 
@@ -47,10 +49,21 @@ const styles = StyleSheet.create({
   },
   statText: {
     alignSelf: 'center',
-  }
+  },
+  linkContainer: {
+    padding: 10,
+    alignItems: 'stretch',
+  },
+  linkButton: {
+    backgroundColor: theme.colors.primary,
+    color: 'white',
+    textAlign: 'center',
+    padding: 10,
+  },
 });
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, singleMode }) => {
+
   return (
   <View style={styles.container}>
     <View style={styles.topContainer}>
@@ -89,6 +102,19 @@ const RepositoryItem = ({ item }) => {
         <Text color="textSecondary" style={styles.statText}>Rating</Text>
       </View>
     </View>
+    {singleMode && (
+      <View style={styles.linkContainer}>
+        <TouchableWithoutFeedback 
+          onPress={() => WebBrowser.openBrowserAsync(item.url)}
+        >
+          <Text 
+            style={styles.linkButton} 
+            fontWeight="bold"
+          >
+            Open in GitHub
+          </Text>
+        </TouchableWithoutFeedback>
+      </View>)}
   </View>);
 };
 
