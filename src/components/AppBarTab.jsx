@@ -9,12 +9,13 @@ const styles = {
     paddingRight: 10,
   }
 }
-const AppBarTab = ({ text, linkTo }) => {
+const AppBarTab = ({ text, linkTo, onPress }) => {
   return (
     <View style={styles.container}>
       <Link 
         to={linkTo}
         component={TouchableWithoutFeedback}
+        onPress={onPress}
       >
         <View>
           <Text color="textAppBar">{text}</Text>
