@@ -28,7 +28,7 @@ export const RepositoryListContainer = ({ repositories }) => {
         />)}
     />
   );
-}
+};
 
 const RepositoryList = () => {
   const { repositories } = useRepositories();
