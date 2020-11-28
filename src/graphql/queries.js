@@ -31,6 +31,20 @@ query GetRepository($id: ID!) {
   repository(id: $id) {
     ...RepositoryInfo
     url
+    reviews {
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
   }
 }
 `;
