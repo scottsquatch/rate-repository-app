@@ -20,6 +20,6 @@ const App = () => {
       </ApolloProvider>
     </NativeRouter>
   );
-}
+};
 
 export default App;

@@ -57,38 +57,39 @@ const RepositoryItem = ({ item }) => {
       <Image 
         style={styles.avatar}
         source={{ uri: item.ownerAvatarUrl }}
+        testID="avatarIcon"
       />
       <View style={styles.infoContainer}>
         <View style={styles.infoItem}>
-          <Text fontWeight="bold">{item.fullName}</Text>
+          <Text fontWeight="bold" testID="nameField">{item.fullName}</Text>
         </View>
         <View sylte={styles.infoItem}>
-          <Text color="textSecondary">{item.description}</Text>
+          <Text color="textSecondary" testID="descriptionField">{item.description}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text style={styles.language}>{item.language}</Text>
+          <Text style={styles.language} testID="languageField">{item.language}</Text>
         </View>
       </View>
     </View>
     <View style={styles.statContainer}>
       <View>
-        <Text fontWeight="bold" style={styles.statText}>{item.stargazersCount > 1000 ? (item.stargazersCount / 1000).toFixed(1) + ' k' : item.stargazersCount}</Text>
+        <Text fontWeight="bold" style={styles.statText} testID="starsField">{item.stargazersCount > 1000 ? (item.stargazersCount / 1000).toFixed(1) + 'k' : item.stargazersCount}</Text>
         <Text color="textSecondary" style={styles.statText}>Stars</Text>
       </View>
       <View>
-        <Text fontWeight="bold" style={styles.statText}>{item.forksCount > 1000 ? (item.forksCount / 1000).toFixed(1) + 'k' : item.forksCount}</Text>
+        <Text fontWeight="bold" style={styles.statText} testID="forksField">{item.forksCount > 1000 ? (item.forksCount / 1000).toFixed(1) + 'k' : item.forksCount}</Text>
         <Text color="textSecondary" style={styles.statText}>Forks</Text>
       </View>
       <View>
-        <Text fontWeight="bold" style={styles.statText}>{item.reviewCount}</Text>
+        <Text fontWeight="bold" style={styles.statText} testID="reviewsField">{item.reviewCount}</Text>
         <Text color="textSecondary" style={styles.statText}>Reviews</Text>
       </View>
       <View>
-        <Text fontWeight="bold" style={styles.statText}>{item.ratingAverage}</Text>
+        <Text fontWeight="bold" style={styles.statText} testID="ratingField">{item.ratingAverage}</Text>
         <Text color="textSecondary" style={styles.statText}>Rating</Text>
       </View>
     </View>
   </View>);
-}
+};
 
 export default RepositoryItem;

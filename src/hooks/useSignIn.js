@@ -21,9 +21,9 @@ import AuthStorageContext from '../contexts/AuthStorageContext';
     apolloClient.resetStore();
 
     return res;
-  }
+  };
 
   return [signIn, result];
-}
+};
 
 export default useSignIn;

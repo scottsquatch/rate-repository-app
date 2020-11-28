@@ -2,13 +2,14 @@ import React from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import { Link } from 'react-router-native';
 
-import Text from './Text'
+import Text from './Text';
 
 const styles = {
   container: {
     paddingRight: 10,
   }
-}
+};
+
 const AppBarTab = ({ text, linkTo, onPress }) => {
   return (
     <View style={styles.container}>

@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { useQuery, useApolloClient} from '@apollo/react-hooks';
 
 import AppBarTab from './AppBarTab';
-import theme from '../theme'
+import theme from '../theme';
 import { GET_AUTHORIZED_USER } from '../graphql/queries';
 import AuthStorageContext from '../contexts/AuthStorageContext';
 
@@ -19,14 +19,15 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { data, loading, error } = useQuery(GET_AUTHORIZED_USER);
+  const { data } = useQuery(GET_AUTHORIZED_USER);
   const apolloClient = useApolloClient();
   const authStorage = useContext(AuthStorageContext);
 
   const logout = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
-  }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
