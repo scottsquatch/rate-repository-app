@@ -28,14 +28,17 @@ const AppBar = () => {
     apolloClient.resetStore();
   };
 
+  const authorizedUser = data ? data.authorizedUser : undefined;
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
         <AppBarTab text="Repositories" linkTo="/" />
-        {data && data.authorizedUser &&<AppBarTab text="Create a review" linkTo="/newreview" />}
-        {data && data.authorizedUser 
+        {authorizedUser &&<AppBarTab text="Create a review" linkTo="/newreview" />}
+        {authorizedUser 
           ? <AppBarTab text="Sign Out" onPress={logout} />
           : <AppBarTab text="Sign In" linkTo="/signin" />}
+        {!authorizedUser && <AppBarTab text="Sing Up" linkTo="/signup" />}
       </ScrollView>
     </View>
   );
