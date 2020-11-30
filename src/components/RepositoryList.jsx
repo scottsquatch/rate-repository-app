@@ -20,14 +20,14 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: "#e1e4e8",
     color: "#e1e4e8",
-    font: theme.fonts.main,
+    fontFamily: theme.fonts.main,
     fontSize: theme.fontSizes.body,
     borderRadius: 0,
   },
   search: {
     backgroundColor: 'white',
     marginBottom: 10,
-    font: theme.fonts.main,
+    fontFamily: theme.fonts.main,
     fontSize: theme.fontSizes.body,
   }
 });
@@ -78,7 +78,11 @@ export class RepositoryListContainer extends React.Component {
   };
 
   render() {
-    const { repositories, onItemPress } = this.props;
+    const { 
+      repositories, 
+      onItemPress,
+      onEndReach,
+    } = this.props;
     const repositoryNodes = repositories 
       ? repositories.edges.map(edge => edge.node)
       : [];
@@ -97,6 +101,8 @@ export class RepositoryListContainer extends React.Component {
               item={item} 
             />
           </TouchableOpacity>)}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
       />
     );
   }
@@ -110,7 +116,7 @@ const RepositoryList = () => {
   const [searchKeyword] = useDebounce(text, 500);
   const history = useHistory();
 
-  const { repositories } = useRepositories(orderBy, orderDirection, searchKeyword);
+  const { repositories, fetchMore } = useRepositories(orderBy, orderDirection, searchKeyword, 8);
 
   const onValueChange = (value) => {
     setOrder(value);
@@ -138,8 +144,14 @@ const RepositoryList = () => {
 
   const onItemPress = (id) => history.push(`/repository/${id}`);
 
+  const onEndReach = () => {
+    console.log('You have reached the end of the list');
+    fetchMore();
+  };
+
   return <RepositoryListContainer 
     repositories={repositories} 
+    onEndReach={onEndReach}
     onValueChange={onValueChange}
     value={order}
     text={text}

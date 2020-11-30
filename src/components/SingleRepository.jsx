@@ -73,12 +73,53 @@ const ItemSeparator = () => <View style={styles.separator} />;
 
 const SingleRepository = () => {
   const { id } = useParams();
-  const { data, loading } = useQuery(GET_REPOSITORY, {
+  const first = 2;
+  const { data, loading, fetchMore, ...result } = useQuery(GET_REPOSITORY, {
     variables: {
-      id
+      id,
+      first
     },
     fetchPolicy: 'cache-and-network',
   });
+
+  const handleFetchMore = () => {
+    const canFetchMore = 
+      !loading && data && data.repository.reviews.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      query: GET_REPOSITORY,
+      variables: {
+        after: data.repository.reviews.pageInfo.endCursor,
+        id,
+        first,
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const nextResult = {
+          repository: {
+            ...fetchMoreResult.repository,
+            reviews: {
+              ...fetchMoreResult.repository.reviews,
+              edges: [
+                ...previousResult.repository.reviews.edges,
+                ...fetchMoreResult.repository.reviews.edges,
+              ],
+            },
+          },
+        };
+
+        return nextResult;
+      }
+    });
+  };
+
+  const onEndReach = () => {
+    console.log('end reached for reviews');
+    handleFetchMore();
+  };
 
   if (loading) {
     return <View><Text>loading...</Text></View>;
@@ -93,6 +134,8 @@ const SingleRepository = () => {
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
