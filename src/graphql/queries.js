@@ -47,6 +47,7 @@ query GetAuthorizedUser($includeReviews: Boolean = false) {
           text
           rating
           createdAt
+          repositoryId
           user {
             id
             username
