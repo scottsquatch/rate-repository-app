@@ -2,12 +2,12 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { useParams } from 'react-router-native';
 import { useQuery } from '@apollo/react-hooks';
-import { format } from 'date-fns';
 
 import RepositoryItem from './RepositoryItem';
 import Text from './Text';
 import { GET_REPOSITORY } from '../graphql/queries';
 import theme from '../theme';
+import ReviewItem from './ReviewItem';
 
 const styles = StyleSheet.create({
   separator: {
@@ -53,21 +53,7 @@ const RepositoryInfo = ({ repository }) => {
   );
 };
 
-const ReviewItem = ({ review }) => {
-  return (
-    <View style={styles.reviewContainer}>
-      <View style={styles.reviewRatingContainer}>
-        <Text style={styles.reviewRating} fontWeight="bold">{review.rating}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text fontWeight="bold" fontSize="subheading">{review.user.username}</Text>
-        <Text color="textSecondary">{format(new Date(review.createdAt), "MM.dd.yyyy")}</Text>
-        <ItemSeparator />
-        <Text>{review.text}</Text>
-      </View>
-    </View>
-  );
-};
+
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
