@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { useDebounce } from 'use-debounce';
 
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import { useHistory } from 'react-router-native';
 import theme from '../theme';
+import TextInput from './TextInput';
 
 const styles = StyleSheet.create({
   separator: {
@@ -22,6 +24,12 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.body,
     borderRadius: 0,
   },
+  search: {
+    backgroundColor: 'white',
+    marginBottom: 10,
+    font: theme.fonts.main,
+    fontSize: theme.fontSizes.body,
+  }
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -42,38 +50,68 @@ const ListOrderDropdown = ({ onValueChange, value }) => {
   );
 };
 
-export const RepositoryListContainer = ({ repositories, onValueChange, value }) => {
-  const history = useHistory();
-  const repositoryNodes = repositories 
-    ? repositories.edges.map(edge => edge.node)
-    : [];
-
+export const RepositoryListHeader = ({ onValueChange, value, onTextChange, text }) => {
   return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      keyExtractor={item => item.id}
-      ListHeaderComponent={() => (
-        <View style={styles.heading}>
-          <ListOrderDropdown onValueChange={onValueChange} value={value} />
-        </View>)}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => history.push(`/repository/${item.id}`)}
-        >
-          <RepositoryItem 
-            item={item} 
-          />
-         </TouchableOpacity>)}
-    />
+    <View style={styles.heading}>
+      <TextInput style={styles.search} value={text} onChangeText={onTextChange} />
+      <ListOrderDropdown onValueChange={onValueChange} value={value} />
+    </View>
   );
-};
+}
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const {
+      onValueChange,
+      value,
+      text,
+      onTextChange,
+    } = this.props;
+
+    return (
+      <RepositoryListHeader
+        onValueChange={onValueChange}
+        value={value}
+        text={text}
+        onTextChange={onTextChange}
+      />
+    );
+  };
+
+  render() {
+    const { repositories, onItemPress } = this.props;
+    const repositoryNodes = repositories 
+      ? repositories.edges.map(edge => edge.node)
+      : [];
+
+    return (
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={this.renderHeader}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => onItemPress(item.id)}
+          >
+            <RepositoryItem 
+              item={item} 
+            />
+          </TouchableOpacity>)}
+      />
+    );
+  }
+}
 
 const RepositoryList = () => {
   const [order, setOrder] = useState('latest');
   const [orderBy, setOrderBy] = useState('CREATED_AT');
   const [orderDirection, setOrderDirection] = useState('DESC');
-  const { repositories } = useRepositories(orderBy, orderDirection);
+  const [text, setText] = useState('');
+  const [searchKeyword] = useDebounce(text, 500);
+  const history = useHistory();
+
+  const { repositories } = useRepositories(orderBy, orderDirection, searchKeyword);
+
   const onValueChange = (value) => {
     setOrder(value);
 
@@ -94,10 +132,19 @@ const RepositoryList = () => {
     }
   };
 
+  const onTextChange = (value) => {
+    setText(value);
+  };
+
+  const onItemPress = (id) => history.push(`/repository/${id}`);
+
   return <RepositoryListContainer 
     repositories={repositories} 
     onValueChange={onValueChange}
     value={order}
+    text={text}
+    onTextChange={onTextChange}
+    onItemPress={onItemPress}
   />;
 };
 
